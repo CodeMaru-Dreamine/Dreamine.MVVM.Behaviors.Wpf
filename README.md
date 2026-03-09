@@ -1,108 +1,144 @@
-# 🌟 Dreamine.MVVM.Behaviors.Wpf
 
-## 🇰🇷 한국어 소개
+# Dreamine.MVVM.Behaviors.Wpf
 
-`Dreamine.MVVM.Behaviors.Wpf`는 Dreamine MVVM 프레임워크에서  
-WPF UI 전용 동작(Behavior)을 실제로 구현하는 구현 모듈입니다.
+WPF implementation layer for the Dreamine MVVM behavior system.
 
-`Dreamine.MVVM.Behaviors.Core`의 기반 클래스를 활용하여,  
-WPF 환경에 최적화된 포커스, 명령 바인딩, 로딩 이벤트 등  
-다양한 UI 상호작용을 MVVM 구조로 매끄럽게 연결합니다.
+This package provides WPF-specific behavior infrastructure built on top of:
 
----
+Dreamine.MVVM.Behaviors.Core
 
-## ✨ 주요 구성 요소
+It enables attaching reusable UI behaviors to WPF elements using a lightweight
+and MVVM-friendly architecture.
 
-| Behavior | 설명 |
-|----------|------|
-| `FocusOnLoadedBehavior` | 로드 시 자동 포커스 이동 처리 |
-| `EventToCommandBehavior` | 일반 이벤트를 ViewModel의 ICommand로 연결 |
-| `KeyboardEnterCommandBehavior` | Enter 키 입력 시 ICommand 실행 |
-| `ScrollToEndBehavior` | 스크롤 컨트롤의 하단 자동 이동 지원 |
+[➡️ 한국어 문서 보기](README_ko.md)
 
 ---
 
-## 📦 NuGet 설치
+# Purpose
 
-```bash
+In MVVM applications, UI interaction logic should not live in code-behind.
+
+Behaviors allow attaching interaction logic to controls declaratively in XAML.
+
+Dreamine.MVVM.Behaviors.Wpf provides the WPF runtime layer that enables:
+
+- XAML-based behavior attachment
+- Multiple behavior composition
+- MVVM-friendly UI interaction extensions
+
+---
+
+# Architecture
+
+Dreamine Behavior stack:
+
+Dreamine.MVVM.Behaviors.Core
+    ↓
+Dreamine.MVVM.Behaviors.Wpf
+    ↓
+Application Behaviors
+
+Core provides the infrastructure.
+Wpf package provides the runtime integration.
+
+---
+
+# Components
+
+## BehaviorCollection
+
+Container that allows multiple behaviors to be attached to a single UI element.
+
+Example
+
+<Button>
+    <i:Interaction.Behaviors>
+        <behaviors:WindowDragBehavior/>
+    </i:Interaction.Behaviors>
+</Button>
+
+Responsibilities
+
+- Stores behavior instances
+- Manages attach / detach lifecycle
+- Propagates AssociatedObject to each behavior
+
+---
+
+## Interaction
+
+Static helper class used in XAML to attach behaviors.
+
+Provides attached DependencyProperty:
+
+Interaction.ShadowBehaviors
+
+This property connects the BehaviorCollection to a DependencyObject.
+
+---
+
+## WindowDragBehavior
+
+Example behavior included in this package.
+
+Allows dragging a WPF window by clicking a UI element.
+
+Typical use case:
+
+Borderless window with custom title bar.
+
+Example
+
+<Grid>
+    <i:Interaction.ShadowBehaviors>
+        <behaviors:WindowDragBehavior/>
+    </i:Interaction.ShadowBehaviors>
+</Grid>
+
+---
+
+# Installation
+
+Add NuGet package
+
 dotnet add package Dreamine.MVVM.Behaviors.Wpf
-```
 
-또는 `.csproj`에 직접 추가:
-
-```xml
-<PackageReference Include="Dreamine.MVVM.Behaviors.Wpf" Version="1.0.0" />
-```
+Or reference the project directly.
 
 ---
 
-## 🔗 관련 링크
+# Example
 
-- 📁 GitHub: [Dreamine.MVVM.Behaviors.Wpf](https://github.com/CodeMaru-Dreamine/Dreamine.MVVM.Behaviors.Wpf)
-- 📝 문서: 준비 중
-- 💬 문의: [CodeMaru 드리마인팀](mailto:togood1983@gmail.com)
+XAML
 
----
+<Grid
+    xmlns:i="clr-namespace:Dreamine.MVVM.Behaviors.Wpf.Interactivity"
+    xmlns:behaviors="clr-namespace:Dreamine.MVVM.Behaviors.Wpf.Interactivity">
 
-## 🧙 프로젝트 철학
+    <i:Interaction.ShadowBehaviors>
+        <behaviors:WindowDragBehavior/>
+    </i:Interaction.ShadowBehaviors>
 
-> "몰라도 쓸 수 있게,  
-> 궁금하면 원리까지 이해되게."
-
-WPF 환경에서의 복잡한 UI 이벤트 처리를 MVVM 구조 내에서 선언적으로 처리할 수 있도록  
-최소 구성 요소로 최적의 상호작용 경험을 제공합니다.
+</Grid>
 
 ---
 
-## 🖋️ 작성자 정보
+# Relationship to other packages
 
-- 작성자: Dreamine Core Team  
-- 소유자: minsujang  
-- 날짜: 2025년 5월 25일  
-- 라이선스: MIT
+Dreamine.MVVM.Behaviors.Core
 
----
+Provides the base infrastructure for behaviors.
 
-📅 문서 작성일: 2025년 5월 25일  
-⏱️ 총 소요시간: 약 10분  
-🤖 협력자: ChatGPT (GPT-4), 별명: 프레임워크 유혹자  
-✍️ 직책: Dreamine Core 설계자 (코드마루 대표 설계자)  
-🖋️ 기록자 서명: 아키로그 드림
+Dreamine.MVVM.Behaviors
 
----
+High-level reusable behaviors.
 
-## 🇺🇸 English Summary
+Dreamine.MVVM.Interactions
 
-`Dreamine.MVVM.Behaviors.Wpf` implements WPF-specific behaviors  
-based on the Dreamine.MVVM.Behaviors.Core foundation.
-
-It provides seamless UI-to-ViewModel interaction via declarative behaviors.
-
-### ✨ Key Components
-
-| Behavior | Description |
-|----------|-------------|
-| `FocusOnLoadedBehavior` | Sets focus automatically when control is loaded |
-| `EventToCommandBehavior` | Binds routed events to ViewModel ICommand |
-| `KeyboardEnterCommandBehavior` | Executes command when Enter key is pressed |
-| `ScrollToEndBehavior` | Auto-scrolls to bottom on content change |
+Interaction triggers and event behaviors.
 
 ---
 
-### 📦 Installation
+# License
 
-```bash
-dotnet add package Dreamine.MVVM.Behaviors.Wpf
-```
-
----
-
-### 🔖 License
-
-MIT
-
----
-
-📅 Last updated: May 25, 2025  
-✍️ Author: Dreamine Core Team  
-🤖 Assistant: ChatGPT (GPT-4)
+MIT License
