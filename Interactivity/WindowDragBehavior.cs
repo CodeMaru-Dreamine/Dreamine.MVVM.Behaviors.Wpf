@@ -20,7 +20,7 @@ namespace Dreamine.MVVM.Behaviors.Wpf.Interactivity
 		{
 			base.OnAttached();  // 기본 동작 실행
 								// AssociatedObject (이 경우 FrameworkElement)에 MouseLeftButtonDown 이벤트를 추가합니다.
-			AssociatedObject.MouseLeftButtonDown += OnMouseLeftButtonDown;
+			AssociatedObject!.MouseLeftButtonDown += OnMouseLeftButtonDown;
 		}
 
 		/// <summary>
@@ -31,7 +31,7 @@ namespace Dreamine.MVVM.Behaviors.Wpf.Interactivity
 		{
 			base.OnDetaching();  // 기본 동작 실행
 								 // AssociatedObject에서 MouseLeftButtonDown 이벤트를 제거합니다.
-			AssociatedObject.MouseLeftButtonDown -= OnMouseLeftButtonDown;
+			AssociatedObject!.MouseLeftButtonDown -= OnMouseLeftButtonDown;
 		}
 
 		/// <summary>

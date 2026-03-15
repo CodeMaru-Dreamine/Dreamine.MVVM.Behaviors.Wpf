@@ -12,8 +12,8 @@ namespace Dreamine.MVVM.Behaviors.Wpf.Interactivity
 	/// </summary>
 	public sealed class BehaviorCollection : FreezableCollection<DependencyObject>, IAttachedObject
 	{
-		private DependencyObject _associatedObject;  // 연결된 대상 객체
-		public DependencyObject AssociatedObject => _associatedObject; // 연결된 대상 객체의 접근자
+		private DependencyObject ? _associatedObject;  // 연결된 대상 객체
+		public DependencyObject AssociatedObject => _associatedObject!; // 연결된 대상 객체의 접근자
 
 		/// <summary>
 		/// <para>Attach 메서드:</para>
