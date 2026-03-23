@@ -34,21 +34,25 @@ namespace Dreamine.MVVM.Behaviors.Wpf.Interactivity
 			AssociatedObject!.MouseLeftButtonDown -= OnMouseLeftButtonDown;
 		}
 
-		/// <summary>
-		/// 마우스 왼쪽 버튼이 눌렸을 때 발생하는 이벤트입니다.
-		/// - 해당 이벤트에서 `Window`를 찾고, `DragMove`를 호출하여 창을 드래그 가능합니다.
-		/// </summary>
-		private void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-		{
-			// 마우스 버튼이 눌렸을 때만 동작
-			if (e.ButtonState == MouseButtonState.Pressed)
-			{
-				// `AssociatedObject` (현재 프레임워크 요소)에서 `Window`를 가져옵니다.
-				Window window = Window.GetWindow(AssociatedObject);
+        /// <summary>
+        /// 마우스 왼쪽 버튼을 눌렀을 때 호출됩니다.
+        /// 연결된 요소가 포함된 Window를 찾아 DragMove를 수행합니다.
+        /// </summary>
+        /// <param name="sender">이벤트를 발생시킨 객체입니다.</param>
+        /// <param name="e">마우스 버튼 이벤트 데이터입니다.</param>
+        private void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            // 왼쪽 버튼이 눌린 상태에서만 창 드래그를 수행합니다.
+            if (e.ButtonState != MouseButtonState.Pressed)
+            {
+                return;
+            }
 
-				// `window`가 null이 아니면 `DragMove` 메서드를 호출하여 창을 드래그합니다.
-				window?.DragMove();
-			}
-		}
-	}
+            // 현재 Behavior가 연결된 요소가 포함된 Window를 찾습니다.
+            Window window = Window.GetWindow(AssociatedObject);
+
+            // Window가 존재하면 DragMove를 호출하여 창 이동을 시작합니다.
+            window?.DragMove();
+        }
+    }
 }

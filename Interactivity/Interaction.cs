@@ -61,41 +61,38 @@ namespace Dreamine.MVVM.Behaviors.Wpf.Interactivity
 			obj.SetValue(BehaviorsProperty, value);
 		}
 
-		/// <summary>
-		/// BehaviorCollection이 변경될 때마다 호출되는 콜백 함수입니다.
-		/// - BehaviorCollection이 변경되면, 해당 컬렉션에 대해 Attach 또는 Detach를 처리합니다.
-		/// </summary>
-		/// <param name="obj">변경된 객체</param>
-		/// <param name="args">속성 변경 인자</param>
-		private static void OnBehaviorsChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
-		{
-			// 이전과 새로운 BehaviorCollection을 가져옵니다.
-			BehaviorCollection oldCollection = (BehaviorCollection)args.OldValue;
-			BehaviorCollection newCollection = (BehaviorCollection)args.NewValue;
+        /// <summary>
+        /// Behaviors 연결 속성이 변경될 때 호출됩니다.
+        /// 이전 컬렉션은 대상 객체에서 분리하고,
+        /// 새로운 컬렉션은 현재 대상 객체에 연결합니다.
+        /// </summary>
+        /// <param name="obj">BehaviorCollection이 연결될 대상 DependencyObject입니다.</param>
+        /// <param name="args">변경 전/후 BehaviorCollection 정보를 포함하는 이벤트 인자입니다.</param>
+        private static void OnBehaviorsChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
+        {
+            // 변경 전/후 BehaviorCollection 참조를 가져옵니다.
+            BehaviorCollection oldCollection = (BehaviorCollection)args.OldValue;
+            BehaviorCollection newCollection = (BehaviorCollection)args.NewValue;
 
-			// 컬렉션이 다르면 Detach 및 Attach 작업을 처리합니다.
-			if (oldCollection != newCollection)
-			{
-				// 이전 컬렉션이 있으면, 그 컬렉션에서 Detach 처리
-				if (oldCollection != null && ((IAttachedObject)oldCollection).AssociatedObject != null)
-				{
-					oldCollection.Detach(); // 이전 BehaviorCollection에서 Detach 호출
-				}
+            // 동일한 컬렉션 참조라면 실제 변경이 없으므로 처리하지 않습니다.
+            if (ReferenceEquals(oldCollection, newCollection))
+            {
+                return;
+            }
 
-				// 새로운 컬렉션이 있으면, 그 컬렉션에 Attach 처리
-				if (newCollection != null && obj != null)
-				{
-					// 이미 AssociatedObject가 있으면, 추가적으로 처리할 필요가 있습니다.
-					if (((IAttachedObject)newCollection).AssociatedObject != null)
-					{
-						// 예외처리: 동일 객체에 여러 번 Behaviors를 추가하려고 할 때 발생
-						// throw new InvalidOperationException("Cannot attach multiple behaviors to the same object.");
-					}
+            // 기존 컬렉션이 이미 어떤 대상 객체에 연결되어 있다면
+            // 먼저 Detach 하여 이전 연결 상태를 정리합니다.
+            if (oldCollection != null && ((IAttachedObject)oldCollection).AssociatedObject != null)
+            {
+                oldCollection.Detach();
+            }
 
-					// 새로운 BehaviorCollection에 Attach 호출
-					newCollection.Attach(obj);
-				}
-			}
-		}
-	}
+            // 새로운 컬렉션과 대상 객체가 모두 유효하면
+            // 새로운 대상 객체에 BehaviorCollection을 연결합니다.
+            if (newCollection != null && obj != null)
+            {
+                newCollection.Attach(obj);
+            }
+        }
+    }
 }
